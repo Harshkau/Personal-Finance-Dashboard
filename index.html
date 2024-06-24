@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgOVEp_HYIMWVJBHgCIz3gOi2Jt4A8ueLvuA&s">
+    <title>Personal Finance Dashboard</title>
+    <style>
+        /* styles.css */
+        body {
+            
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+         font-family: "Raleway", sans-serif;
+        }
+
+        header, footer {
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        .head{
+            width: auto;
+        }
+        main {
+            padding: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .metric {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric p {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .forms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form h2 {
+            margin-top: 0;
+        }
+
+        form input, form select, form button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .chart {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .income-statement {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .income-statement ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .income-statement li {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .income-statement span {
+            font-weight: bold;
+        }
+        button{
+            color: black;
+            background-color:rgb(43, 205, 43);
+            border-radius: 10px;
+            border:0px ;
+            height:20px;
+        }
+
+        @media (max-width: 768px) {
+            .metrics {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .forms {
+                grid-template-columns: 1fr;
+            }
+
+            .charts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="head">
+        <h1>Personal Finance Dashboard</h1>
+    </header>
+    <main>
+        <div class="dashboard">
+            <div class="metrics">
+                <div class="metric" id="gross-profit-margin">
+                    <canvas id="grossProfitChart"></canvas>
+                    <p>GROSS PROFIT MARGIN</p>
+                </div>
+                <div class="metric" id="opex-ratio">
+                    <canvas id="opexRatioChart"></canvas>
+                    <p>OPEX RATIO</p>
+                </div>
+                <div class="metric" id="operating-profit-margin">
+                    <canvas id="operatingProfitChart"></canvas>
+                    <p>OPERATING PROFIT MARGIN</p>
+                </div>
+                <div class="metric" id="net-profit-margin">
+                    <canvas id="netProfitChart"></canvas>
+                    <p>NET PROFIT MARGIN</p>
+                </div>
+            </div>
+            <div class="forms">
+                <form id="income-form">
+                    <h2>Income</h2>
+                    <input type="number" id="income" placeholder="Income" required>
+                    <button type="submit">Add Income</button>
+                </form>
+                <form id="expense-form">
+                    <h2>Expenses</h2>
+                    <input type="text" id="expense-description" placeholder="Description" required>
+                    <input type="number" id="expense-amount" placeholder="Amount" required>
+                    <select id="expense-category">
+                        <option value="Sales">Sales</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="General & Admin">General & Admin</option>
+                    </select>
+                    <button type="submit">Add Expense</button>
+                </form>
+            </div>
+            <div class="charts">
+                <div class="chart" id="opex-chart">
+                    <h2>OPEX</h2>
+                    <canvas id="opexChart"></canvas>
+                </div>
+                <div class="chart" id="ebit-chart">
+                    <h2>Earnings before Interest and Taxes</h2>
+                    <canvas id="ebitChart"></canvas>
+                </div>
+            </div>
+            <div class="income-statement">
+                <h2>INCOME STATEMENT</h2>
+                <ul id="income-statement-list">
+                    <li>Revenue: <span id="revenue">$0</span></li>
+                    <li>COGS: <span id="cogs">$0</span></li>
+                    <li>GROSS PROFIT: <span id="gross-profit">$0</span></li>
+                    <li>OPEX: <span id="opex">$0</span></li>
+                    <li>Sales: <span id="sales">$0</span></li>
+                    <li>Marketing: <span id="marketing">$0</span></li>
+                    <li>General & Admin: <span id="general-admin">$0</span></li>
+                    <li>OPERATING PROFIT (EBIT): <span id="ebit">$0</span></li>
+                    <li>NET PROFIT: <span id="net-profit">$0</span></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Personal Finance Dashboard</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // script.js
+
+        let income = 0;
+        let expenses = {
+            Sales: 0,
+            Marketing: 0,
+            'General & Admin': 0
+        };
+
+        // GSAP Animation for Metrics
+        gsap.from(".metric", { opacity: 0, y: 50, duration: 1, stagger: 0.2 });
+
+        // Chart.js for Gross Profit Margin
+        const grossProfitCtx = document.getElementById('grossProfitChart').getContext('2d');
+        const grossProfitChart = new Chart(grossProfitCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Gross Profit', 'Remaining'],
+                datasets: [{
+                    data: [0, 100],
+                    backgroundColor: ['#4CAF50', '#ddd']
+                }]
+            },
+            options: {
+                cutoutPercentage: 70
+            }
+        });
+
+        // Chart.js for Opex Ratio
+        const opexRatioCtx = document.getElementById('opexRatioChart').getContext('2d');
+        const opexRatioChart = new Chart(opexRatioCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Opex', 'Remaining'],
+                datasets: [{
+                    data: [0, 100],
+                    backgroundColor: ['#4CAF50', '#ddd']
+                }]
+            },
+            options: {
+                cutoutPercentage: 70
+            }
+        });
+
+        // Chart.js for Operating Profit Margin
+        const operatingProfitCtx = document.getElementById('operatingProfitChart').getContext('2d');
+        const operatingProfitChart = new Chart(operatingProfitCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Operating Profit', 'Remaining'],
+                datasets: [{
+                    data: [0, 100],
+                    backgroundColor: ['#4CAF50', '#ddd']
+                }]
+            },
+            options: {
+                cutoutPercentage: 70
+            }
+        });
+
+        // Chart.js for Net Profit Margin
+        const netProfitCtx = document.getElementById('netProfitChart').getContext('2d');
+        const netProfitChart = new Chart(netProfitCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Net Profit', 'Remaining'],
+                datasets: [{
+                    data: [0, 100],
+                    backgroundColor: ['#4CAF50', '#ddd']
+                }]
+            },
+            options: {
+                cutoutPercentage: 70
+            }
+        });
+
+        // Chart.js for OPEX
+        const opexCtx = document.getElementById('opexChart').getContext('2d');
+        const opexChart = new Chart(opexCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Sales', 'Marketing', 'General & Admin'],
+                datasets: [{
+                    label: 'Expenses',
+                    data: [0, 0, 0],
+                    backgroundColor: ['#4CAF50', '#FF9800', '#2196F3']
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Chart.js for EBIT
+        const ebitCtx = document.getElementById('ebitChart').getContext('2d');
+        const ebitChart = new Chart(ebitCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'EBIT Actual',
+                    data: [],
+                    borderColor: '#4CAF50',
+                    fill: false
+                }, {
+                    label: 'EBIT Target',
+                    data: [],
+                    borderColor: '#FF9800',
+                    borderDash: [5, 5],
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Handle income form submission
+        document.getElementById('income-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const incomeValue = parseFloat(document.getElementById('income').value);
+            income += incomeValue;
+            updateIncomeStatement();
+            updateCharts();
+            document.getElementById('income-form').reset();
+        });
+
+        // Handle expense form submission
+        document.getElementById('expense-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const description = document.getElementById('expense-description').value;
+            const amount = parseFloat(document.getElementById('expense-amount').value);
+            const category = document.getElementById('expense-category').value;
+
+            expenses[category] += amount;
+            updateIncomeStatement();
+            updateCharts();
+            document.getElementById('expense-form').reset();
+        });
+
+        // Update income statement
+        function updateIncomeStatement() {
+            const revenue = income;
+            const cogs = expenses.Sales + expenses.Marketing + expenses['General & Admin'];
+            const grossProfit = revenue - cogs;
+            const opex = cogs;
+            const ebit = grossProfit - opex;
+            const netProfit = ebit; // Simplified, no interest and taxes for this example
+
+            document.getElementById('revenue').innerText = `$${revenue.toFixed(2)}`;
+            document.getElementById('cogs').innerText = `$${cogs.toFixed(2)}`;
+            document.getElementById('gross-profit').innerText = `$${grossProfit.toFixed(2)}`;
+            document.getElementById('opex').innerText = `$${opex.toFixed(2)}`;
+            document.getElementById('sales').innerText = `$${expenses.Sales.toFixed(2)}`;
+            document.getElementById('marketing').innerText = `$${expenses.Marketing.toFixed(2)}`;
+            document.getElementById('general-admin').innerText = `$${expenses['General & Admin'].toFixed(2)}`;
+            document.getElementById('ebit').innerText = `$${ebit.toFixed(2)}`;
+            document.getElementById('net-profit').innerText = `$${netProfit.toFixed(2)}`;
+        }
+
+        // Update charts
+        function updateCharts() {
+            const revenue = income;
+            const cogs = expenses.Sales + expenses.Marketing + expenses['General & Admin'];
+            const grossProfit = revenue - cogs;
+            const opex = cogs;
+            const ebit = grossProfit - opex;
+            const netProfit = ebit; // Simplified, no interest and taxes for this example
+
+            // Update doughnut charts
+            grossProfitChart.data.datasets[0].data = [grossProfit, revenue - grossProfit];
+            grossProfitChart.update();
+
+            opexRatioChart.data.datasets[0].data = [opex, revenue - opex];
+            opexRatioChart.update();
+
+            operatingProfitChart.data.datasets[0].data = [ebit, revenue - ebit];
+            operatingProfitChart.update();
+
+            netProfitChart.data.datasets[0].data = [netProfit, revenue - netProfit];
+            netProfitChart.update();
+
+            // Update OPEX bar chart
+            opexChart.data.datasets[0].data = [expenses.Sales, expenses.Marketing, expenses['General & Admin']];
+            opexChart.update();
+
+            // Update EBIT line chart
+            ebitChart.data.labels.push(new Date().toLocaleDateString());
+            ebitChart.data.datasets[0].data.push(ebit);
+            ebitChart.data.datasets[1].data.push(grossProfit); // Simplified target as gross profit
+            ebitChart.update();
+        }
+    </script>
+</body>
+</html>
