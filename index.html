@@ -12,19 +12,22 @@
             
             margin: 0;
             padding: 0;
-            background: #f9f9f9;
+            background: rgb(238,174,202);
+background: radial-gradient(circle,rgb(49, 60, 73) 100%, rgb(98, 79, 169) 0%);
          font-family: "Raleway", sans-serif;
+         color: #000000;
         }
 
         header, footer {
-            background: #4CAF50;
-            color: white;
+            background:linear-gradient( rgb(84, 68, 143) 0%, rgb(49, 60, 73) 100%);
+            color: rgb(250, 249, 249);
             text-align: center;
             padding: 1em 0;
         }
 
         .head{
             width: auto;
+            text-shadow: white 2px 2px 20px ;
         }
         main {
             padding: 20px;
@@ -40,14 +43,22 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 20px;
+            color: black;
+            
+
         }
 
         .metric {
-            background: white;
+            background: rgba(0, 0, 0, 0.41);
+             color: rgb(250, 250, 250);
             padding: 20px;
+            border:2px solid rgb(255, 255, 255);
+            box-shadow: 2px 3px 10px rgb(218, 213, 213);
             border-radius: 10px;
             text-align: center;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-decoration: #000000 ;
+            
+           
         }
 
         .metric p {
@@ -62,7 +73,8 @@
         }
 
         form {
-            background: white;
+            background: rgba(0, 0, 0, 0.41);
+            color: aliceblue;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -76,7 +88,10 @@
             display: block;
             width: 100%;
             margin: 10px 0;
+            height: 20px;
+            border-radius: 10px;
         }
+
 
         .charts {
             display: grid;
@@ -85,14 +100,18 @@
         }
 
         .chart {
-            background: white;
+            color: white;
+            background: rgba(0, 0, 0, 0.528);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
         }
 
         .income-statement {
-            background: white;
+
+            background: rgba(0, 0, 0, 0.41);
+            color: aliceblue;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -112,12 +131,13 @@
         .income-statement span {
             font-weight: bold;
         }
+
         button{
             color: black;
             background-color:rgb(43, 205, 43);
             border-radius: 10px;
             border:0px ;
-            height:20px;
+            height:50px;
         }
 
         @media (max-width: 768px) {
